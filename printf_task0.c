@@ -84,24 +84,25 @@ int print_intgr(int n)
  * Return: count
  */
 
-int handle_format(char specifier, va_list args)
-{
-	int count;
+int handle_format(char specifier, va_list args) {
+    int count = 0;
 
-	count = 0;
+    if (specifier == 'c')
+        count = print_chr(va_arg(args, int));
+    else if (specifier == 's')
+        count += print_str(va_arg(args, char *));
+    else if (specifier == '%')
+        count = print_percnt();
+    else if (specifier == 'd' || specifier == 'i')
+        count += print_intgr(va_arg(args, int));
+    else if (specifier == 'b') {
+        // Assuming print_binry is implemented
+        count += print_binry(va_arg(args, unsigned int));
+    } else {
+        // Handling unknown specifier
+        write(1, &specifier, 1);
+        count++;
+    }
 
-	if (specifier == 'c')
-		count = print_chr(va_arg(args, int));
-	else if (specifier == 's')
-		count += print_str(va_arg(args, char *));
-	else if (specifier == '%')
-		count = print_percnt();
-	else if (specifier == 'd' || specifier == 'i')
-		count += print_intgr(va_arg(args, int));
-	else if (specifier == 'b')
-		count += print_binry(va_arg(args, unsigned int));
-	else
-		write(1, &specifier, 1);
-
-	return (count);
+    return count;
 }
