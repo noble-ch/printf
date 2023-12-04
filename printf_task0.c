@@ -20,88 +20,57 @@ int print_chr(int c)
  *
  * Return: count
  */
+int _printf(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
 
-int print_str(char *string)
-{
-	int count;
+    int count = 0;
 
-	count = 0;
-	while (*string != '\0')
-	{
-		print_chr((int)*string);
-		++count;
-		++string;
-	}
-	return (count);
+    while (*format != '\0') {
+        if (*format == '%') {
+            format++; // Move past '%'
+
+            // Handle different conversion specifiers
+            switch (*format) {
+                case 'c': {
+                    // Fetch char argument and print
+                    char c = (char)va_arg(args, int);
+                    putchar(c);
+                    count++;
+                    break;
+                }
+                case 's': {
+                    // Fetch string argument and print
+                    char *str = va_arg(args, char *);
+                    while (*str != '\0') {
+                        putchar(*str);
+                        str++;
+                        count++;
+                    }
+                    break;
+                }
+                case '%':
+                    // Handle %%
+                    putchar('%');
+                    count++;
+                    break;
+                default:
+                    // Handle unsupported conversion specifiers
+                    return -1;
+            }
+        } else {
+            // Regular character, print it
+            putchar(*format);
+            count++;
+        }
+        format++;
+    }
+
+    va_end(args);
+    return count;
 }
 
-/**
- * print_percnt - prints a percent
- *
- * Return: % - percent
- */
-
-int print_percnt(void)
-{
-	return (write(1, "%%", 1));
-}
-
-/**
- * print_intgr - Prints an integer
- * @n: integer
- *
- * Return: count
- */
-
-int print_intgr(int n)
-{
-	int count;
-
-	count = 0;
-	if (n < 0)
-	{
-		write(1, "-", 1);
-		count++;
-		n = -n;
-	}
-	if (n < 10)
-	{
-		count += print_chr('0' + n);
-	}
-	else
-	{
-		count += print_intgr(n / 10);
-		count += print_chr('0' + n % 10);
-	}
-	return (count);
-}
-
-/**
- * handle_format - Handles the different format specifiers
- * @specifier: format specifier
- * @args: Args
- *
- * Return: count
- */
-
-int handle_format(char specifier, va_list args)
-{
-	int count;
-
-	count = 0;
-
-	if (specifier == 'c')
-		count = print_chr(va_arg(args, int));
-	else if (specifier == 's')
-		count += print_str(va_arg(args, char *));
-	else if (specifier == '%')
-		count = print_percnt();
-	else if (specifier == 'd' || specifier == 'i')
-		count += print_intgr(va_arg(args, int));
-	else if (specifier == 'b')
-		count += print_binry(va_arg(args, unsigned int));
-	else
-		write(1, &specifier, 1);
-
-	return (count);
+int main() {
+    _printf("I'm not going anywhere. You can print that wherever you want to. I'm here and I'm a Spur for life %%\n");
+    return 0;
 }
