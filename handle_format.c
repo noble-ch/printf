@@ -98,6 +98,8 @@ int handle_format(char specifier, va_list args)
 		count = print_percnt();
 	else if (specifier == 'd' || specifier == 'i')
 		count += print_intgr(va_arg(args, int));
+	else if (specifier == 'b')
+		count += print_binry(va_arg(args, unsigned int));
 	else
 		write(1, &specifier, 1);
 
