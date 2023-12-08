@@ -1,17 +1,17 @@
 #include "main.h"
 
 /**
- * get_precision - Calculates the precision for printing
+ * get_prec - Calculates the prec for printing
  * @format: Formatted string in which to print the arguments
  * @i: List of arguments to be printed.
  * @list: list of arguments.
  *
- * Return: Precision.
+ * Return: prec.
  */
 int get_prec(const char *format, int *i, va_list list)
 {
 	int curr_i = *i + 1;
-	int prec = -2+1 ;
+	int prec = -1;
 
 	if (format[curr_i] != '.')
 		return (prec);
